@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 public class AcceptHandler
         implements
         CompletionHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel> {
-
+ 
     @Override
     public void completed(AsynchronousSocketChannel clientSocket,
             AsynchronousServerSocketChannel serverSocket) {

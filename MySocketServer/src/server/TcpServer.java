@@ -1,44 +1,41 @@
 package server;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TcpServer implements Runnable {
 
-    private final int PORT = 9000;
-
     private AsynchronousChannelGroup channelGroup;
-    private AsynchronousServerSocketChannel listener;
+    private AsynchronousServerSocketChannel serverSocket;
+    private int threadPoolSize;
+    private int port;
 
-    public static void main(String[] args) throws Exception {
-        // TODO Complete for real deployment
-        // now design for test
-        TcpServer server = new TcpServer();
-        new Thread(server).start();
-        
+    public TcpServer (int port, int threadPoolSize) throws IOException {
+        this.threadPoolSize = threadPoolSize;
+        this.port = port;
+            channelGroup = AsynchronousChannelGroup.withThreadPool(Executors
+                    .newFixedThreadPool(threadPoolSize));
+            serverSocket = AsynchronousServerSocketChannel.open(channelGroup);
+            serverSocket.bind(new InetSocketAddress(port));
+            System.out.println("Socket server is listening on port " + port);
     }
-
-    public TcpServer() throws Exception {
-        // Create a thread pool with max threads number 20
-        ExecutorService executor = Executors.newFixedThreadPool(20);
-        channelGroup = AsynchronousChannelGroup.withThreadPool(executor);
-        // Create a socket server
-        listener = AsynchronousServerSocketChannel.open(channelGroup).bind(
-                new InetSocketAddress(PORT));
-    }
-
+    
+    @Override
     public void run() {
-        try {
-            listener.accept(listener, new AcceptHandler());
-            Thread.sleep(400000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("Server Closed");
+        serverSocket.accept(serverSocket, new AcceptHandler());
+        while (true) {
+                try {
+                    Thread.sleep(360000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.out.println("Thread Error, please restart");
+                    break;
+                }
         }
     }
-
+  
 }

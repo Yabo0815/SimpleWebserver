@@ -16,7 +16,7 @@ import com.socket.server.HttpWarpper.*;
  */
 public class HttpServer {
 	private ServerSocket serverSocket;
-    private int port;
+        private int port;
 	public String ENCODING="utf-8";
 	private boolean Stopped=false;
 	
@@ -24,11 +24,12 @@ public class HttpServer {
 	public int  getPort(){ return port;}
 	public void setPort(int port) { this.port=port;}
 	
-    public HttpServer(){
-    	this(HttpConstants.DEFAULT_PORT);
-    }
+        public HttpServer(){
+    		this(HttpConstants.DEFAULT_PORT);
+        }
+        
 	public HttpServer(int port){
-		    setPort(port);
+		setPort(port);
 	}
 	
 	/**

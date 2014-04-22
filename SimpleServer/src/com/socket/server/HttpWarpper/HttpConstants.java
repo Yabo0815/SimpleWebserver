@@ -11,9 +11,8 @@ import java.util.*;
  *
  */
 public interface HttpConstants {
-	 public final static String MyWeb=System.getProperty("user.dir")+File.separator+"MyWeb";
-	 //public final static String MyWeb=getContext().getServletContext().getRealPath("/")+File.separator+"MyWeb";
-	 
+	 //public static final String MyWeb=System.getProperty("user.dir")+File.separator+"MyWeb";
+	 public static final int DEFAULT_PORT=8080;
 	 public static final String CRLF="\r\n";
 	 enum HttpMethod  {
 		 get("GET"),
@@ -110,5 +109,6 @@ public interface HttpConstants {
 		 put("gzip","application/x-gzip");
 		 put("exe","application/octest-stream");
 	 }};
+	
 
 }

@@ -3,30 +3,41 @@
  */
 package com.socket.server.HttpWarpper;
 
+import java.io.*;
 import java.net.*;
+
+import com.socket.server.HttpWarpper.HttpConstants.*;
+
 
 /**
  * @author charles
  *
  */
 public class HttpConnectionHandler implements Runnable {
-	private Socket sock;
+    Socket sock;
+	InputStream in;
+	OutputStream out;
+	HttpRequest req;
+	HttpResponse res;
 	
-	public HttpConnectionHandler(Socket sock) {
+	public HttpConnectionHandler(Socket sock) throws IOException   {
 		this.sock=sock;
+		
+		
+		
 	}
+	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		try {
-			HttpRequest req=new HttpRequest(sock.getInputStream());
-			HttpResponse res=new HttpResponse(req);
-			res.writeInfo(sock.getOutputStream());
-		} catch(Exception e) {
+			this.in=sock.getInputStream();
+			this.out=sock.getOutputStream();
+			this.req=new HttpRequest(in);
+			this.res=new HttpResponse(req,out);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
+
 
 }

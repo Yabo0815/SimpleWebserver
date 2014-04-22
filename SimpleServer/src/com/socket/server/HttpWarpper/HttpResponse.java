@@ -3,6 +3,9 @@ package com.socket.server.HttpWarpper;
 import java.io.*;
 import java.util.*;
 
+import com.socket.server.HttpWarpper.HttpConstants.HttpVersion;
+import com.socket.server.HttpWarpper.HttpConstants.StatusCode;
+
 
 /*
  *  <http-version> <reponse-code> <response-text> CRLF
@@ -14,72 +17,131 @@ import java.util.*;
  *  <body>
  */
 public class HttpResponse implements HttpConstants {
-	//private HttpVersion _version=HttpVersion._1_1;
-	StringBuilder sb=new StringBuilder();
-    private byte[] data;
+	
+    byte[] data;
     private int contentLength;
+    private HttpRequest req;
+    private OutputStream out;
  
-    private Map<String,String> HeaderFormat=new HashMap<String,String>();
-	 HttpResponse(HttpRequest req) throws IOException {
-		// TODO Auto-generated constructor stub
-		switch(req.getMethod()) {
+    //private Map<String,String> HeaderFormat=new HashMap<String,String>();
+	HttpResponse(HttpRequest req,OutputStream out) throws IOException  {
+		this.req=req;
+		this.out=out;
+		sendContent();
+	}
+	 
+	
+	
+	
+	
+	private void sendContent() throws IOException {
+	    switch(req.getMethod()) {
 			case get:
-				doGet(req,this);
-			    break;
-			case head:
-				doHead(req,this);
+				doGet();
 				break;
 			case post:
-				doPost(req,this);
+				doPost();
 				break;
-			case unrecognized:
+			case head:
+				doHead();
 				break;
 			default:
-			    break;
-		}
-	}
-	 private void doPost(HttpRequest req, HttpResponse res) {
-		// TODO Auto-generated method stub
-		
-	}
-	private void doHead(HttpRequest req, HttpResponse res) {
-		// TODO Auto-generated method stub
-		
-	}
-	private void doGet(HttpRequest req, HttpResponse res) throws IOException {
-		// TODO Auto-generated method stub
-		addStatusLine(StatusCode._200);
-		sb.append("Content-type:"+getMimeType(req)+CRLF);
-		
-		File file=new File(MyWeb,req.getUri());
-		System.out.println(file.getAbsolutePath());
-		setData(getBytes(file));
-		setContentLength(getBytes(file).length);
-		sb.append("Content-Length:"+contentLength);
-		
+				SendClientEroor(StatusCode._501, out);
+				break;
+			}
 	}
 	
-	private String getMimeType(HttpRequest req){
-		String filename=req.getFileNameFromUri(req.getUri());
-		String[] tokens=filename.split("\\.");
-		return MIME_TYPES.get(tokens[tokens.length-1]);
+	private void doGet() throws IOException {
+		
+		String filename="./MyWeb" +req.getUri(); // '.' represents the current dir 
+		FileInputStream fis=null;
+		boolean isExists=true;
+		
+		try {
+			fis=new FileInputStream(filename);
+		} catch (FileNotFoundException e) {
+			isExists=false;
+		}
+		String statusLine=null;
+		String contentTypeLine=null;
+		String contentLengthLine="error";
+		String errorBody=null;
+		if(isExists) {
+			statusLine=HttpVersion._1_1+" "+StatusCode._200+" Simpler Web Server "+HttpConstants.CRLF;
+			contentTypeLine="Content-Type: "+req.getMimeType(filename)+HttpConstants.CRLF;
+			contentLengthLine="Content-Length: "+(new Integer(fis.available()).toString())+HttpConstants.CRLF;
+		}
+		else {
+			statusLine=HttpVersion._1_1+" "+StatusCode._404+" Simpler Web Server "+HttpConstants.CRLF;
+			contentTypeLine="Content-Type: text/html"+HttpConstants.CRLF;
+			errorBody="<HTML>" +   
+			           "<HEAD><TITLE>Simple Web Server Error</TITLE></HEAD>" +   
+			           "<BODY>"+ StatusCode._404  
+			           +"<br>usage:http://yourHostName:port/"   
+			           +"fileName.html</BODY></HTML>" ;
+		}
+		
+		//Send headers
+		out.write(statusLine.getBytes());
+		out.write(contentTypeLine.getBytes());
+		out.write(contentLengthLine.getBytes());
+		out.write(HttpConstants.CRLF.getBytes());
+		
+		//Send body
+		if(isExists) {
+			sendBody(fis,out);
+			fis.close();
+		}
+		else {
+			out.write(errorBody.getBytes());
+		}
 	}
-	//Report the error to the client with status code
+
+       private void sendBody(FileInputStream fis, OutputStream out) throws IOException {
+		// TODO Auto-generated method stub
+		byte[] buffer=new byte[1024];
+		int len=0;
+		while((len=fis.read(buffer))!=-1) {
+			out.write(buffer,0,len);
+		}
+	   }
+
+		
+	private void doHead() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	private void doPost() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	
+
+    //Report the error to the client with status code
 	 public void SendClientEroor(StatusCode sc,OutputStream out) throws IOException {
-		 //addStatusLine(sc);
+		
 		 //Build the HTTP response body
 		 String errorBody="<html><head><title>Simple Web Server Error</title></head>"+
                           "<body>"+sc.toString()+"</body><html>";
 		 setData(errorBody.getBytes());
-	     writeInfo(out);
+	     writeContent(out);
 		 
       }
 	 public void setData(byte[] data) {this.data=data;}
 	 public byte[] getData() {return data;}
 	 
 	 public void setContentLength(int len) {this.contentLength=len;}
-	
-	
+	 public int getContentLength() {return contentLength;}
 	
 	
 	
@@ -97,20 +159,18 @@ public class HttpResponse implements HttpConstants {
 		return arr;
 	}
 	
-	public void addStatusLine(StatusCode status) throws IOException {
-		
-		sb.append(HttpVersion._1_1+" "+status.toString()+" Simpler Web Server "+CRLF);
-	}
-	//public void addBody(StringBuilder )
-   
-	public void writeInfo(OutputStream out) throws IOException {
+   public void writeContent(OutputStream out) throws IOException {
 		DataOutputStream output=new DataOutputStream(out);
+		
+		//output.write(writeStatusLine().getBytes());
+		//output.write(writeHeaders().getBytes());
 		
 		if(data!=null) setContentLength(data.length);
 		else setContentLength(0);
-		output.writeBytes(sb.toString());
 		if(data!=null) output.write(data);
 		output.flush();
 		output.close();
 	}
+	
+	
 }

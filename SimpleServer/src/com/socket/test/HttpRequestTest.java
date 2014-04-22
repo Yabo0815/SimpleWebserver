@@ -22,10 +22,12 @@ public class HttpRequestTest {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+		// GET /index.html(/a.image ) HTTP/1.1
+		// GET /test/test.html
 		HttpRequest req = new HttpRequest(new ByteArrayInputStream("HEAD /index.html HTTP/1.1\r\n".getBytes()));
 		boolean flag=req.getMethod().equals(HttpMethod.head);
 		System.out.println("HEAD test successful : "+flag);
-		System.out.println(req.getFileNameFromUri(req.getUri()));
+		//System.out.println(req.getFileNameFromUri(req.getUri()));
 		
 		HttpRequest req1 = new HttpRequest(new ByteArrayInputStream("GET / HTTP/1.1\r\n".getBytes()));
 		boolean flag1=req1.getMethod().equals(HttpMethod.get);

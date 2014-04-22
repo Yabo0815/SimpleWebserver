@@ -14,7 +14,7 @@ import com.socket.server.HttpWarpper.HttpConstants.*;
  *
  */
 public class HttpConnectionHandler implements Runnable {
-    Socket sock;
+        Socket sock;
 	InputStream in;
 	OutputStream out;
 	HttpRequest req;

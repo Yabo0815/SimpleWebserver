@@ -10,6 +10,7 @@ public class StartServer {
     public static void main(String[] args) throws IOException {
         int port = 8080; // default port
         int threadSize = 20; // default thread pool size
+        String index = "index.html";
         int i = 0;
         
         // Set the parameters
@@ -20,12 +21,13 @@ public class StartServer {
                 return;
             }
             int j = args[i].indexOf("-", 1);
-            int len = args[i].length();
             String cmdStr = args[i].substring(1, j);
             if (cmdStr.equals("port")) {
-                port = Integer.parseInt(args[i].substring(j+1, len));
+                port = Integer.parseInt(args[i].substring(j+1));
             } else if (cmdStr.equals("thread")) {
-                threadSize = Integer.parseInt(args[i].substring(j+1, len));
+                threadSize = Integer.parseInt(args[i].substring(j+1));
+            } else if (cmdStr.equals("index")) {
+                index = args[i].substring(j+1);
             } else {
                 System.out.println("Invalid Command, please start the server again");
                 return;
@@ -34,7 +36,7 @@ public class StartServer {
         }
         
         // start the server
-        TcpServer server = new TcpServer(port, threadSize);
+        TcpServer server = new TcpServer(port, threadSize, index);
         Thread thread = new Thread(server);
         thread.start();
         
@@ -50,7 +52,7 @@ public class StartServer {
 
     public static boolean verifyCmdFormat(String cmd) {
         boolean isQualified = false;
-        if (cmd.matches("-[a-z]+-[1-9][0-9]{0,4}"))
+        if (cmd.matches("-[a-z]+-[1-9a-zA-Z][0-9a-zA-Z\\.]*"))
             isQualified = true;
         return isQualified;
     }

@@ -12,6 +12,7 @@ public class HttpHelper implements HttpConstants {
     private HttpMethod method;
     private String uri;
     private HttpVersion version;
+    private static String index;
 
     public HttpHelper(String httpStr) {
         setHttpStr(httpStr);
@@ -49,6 +50,14 @@ public class HttpHelper implements HttpConstants {
     public HttpVersion getVersion() {
         return version;
     }
+    
+    public static void setIndex(String fileName) {
+        index = fileName;
+    }
+
+    public static String getIndex() {
+        return index;
+    }
 
     public void parse() throws IOException {
         StringTokenizer splitter = new StringTokenizer(httpStr);
@@ -70,8 +79,8 @@ public class HttpHelper implements HttpConstants {
     public ByteBuffer wrap() throws Exception {
         String responseCode;
         if (uri.equals("/"))
-            uri = "/index.html"; // to improve for personalize
-        String fileRoute = WEB_ROOT + uri;
+            uri = index; // to improve for personalize
+        String fileRoute = WEB_ROOT + File.separator + uri;
         String statusLine = null;
         String serverLine = null;
         String contentTypeLine = null;

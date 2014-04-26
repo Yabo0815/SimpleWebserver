@@ -7,7 +7,7 @@ import java.nio.channels.CompletionHandler;
 
 public class WriteHandler implements CompletionHandler<Integer, ByteBuffer>{
     private AsynchronousSocketChannel clientSocket;
-    
+    // the callback of write function
     public WriteHandler(AsynchronousSocketChannel clientSocket) {
         this.clientSocket = clientSocket;
     }
@@ -15,7 +15,6 @@ public class WriteHandler implements CompletionHandler<Integer, ByteBuffer>{
     @Override
     public void completed(Integer bufferSize, ByteBuffer outBuffer) {
         try {
-            System.out.println("write handler");
             clientSocket.shutdownOutput();
             clientSocket.close();
         } catch (IOException e) {

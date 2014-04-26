@@ -23,6 +23,7 @@ public class TcpServer implements Runnable {
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
         channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool);
         serverSocket = AsynchronousServerSocketChannel.open(channelGroup);
+        // set the server listening on localhost:port
         serverSocket.bind(new InetSocketAddress(port));
         // Allow the reuse of port 8080, and set the buffer size
         serverSocket.setOption(StandardSocketOptions.SO_REUSEADDR, true);
@@ -50,7 +51,9 @@ public class TcpServer implements Runnable {
     }
 
     public void stop() {
+        // stop the TcpServer thread
         blinker = null;
+        // shutdown the thread pool
         threadPool.shutdown();
     }
 }

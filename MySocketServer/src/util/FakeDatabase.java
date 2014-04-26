@@ -1,28 +1,26 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FakeDatabase {
-    private String userName;
-    private String password;
-    private String nickName;
+    List<UserInfo> users = new ArrayList<UserInfo>();
     
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public boolean add(UserInfo userInfo) {
+        users.add(userInfo);
+        return true;
     }
-    public String getUserName() {
-        return userName;
+    
+    public boolean delete(String userName, String password) {
+        return true;
+    }
+    
+    public boolean modify(String userName, String password) {
+        return true;
+    }
+    
+    public boolean find(String userName) {
+        return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getPassword() {
-        return password;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-    public String getNickName() {
-        return nickName;
-    }
 }

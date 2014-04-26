@@ -7,6 +7,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
 
 public class ReadHandler implements CompletionHandler<Integer, ByteBuffer> {
+    // the call back of read function
     private AsynchronousSocketChannel clientSocket;
 
     // Constructor
@@ -19,6 +20,7 @@ public class ReadHandler implements CompletionHandler<Integer, ByteBuffer> {
         String inString = null;
         if (bytesLength > 0) {
             inBuffer.flip();
+            // Buffer to String
             inString = getStringFromBuffer(inBuffer);
             inBuffer.compact();
             Processor processor = new Processor(clientSocket, inString);

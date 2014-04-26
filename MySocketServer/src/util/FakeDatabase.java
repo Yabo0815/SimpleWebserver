@@ -4,23 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FakeDatabase {
-    List<UserInfo> users = new ArrayList<UserInfo>();
+    private static List<UserInfo> users = new ArrayList<UserInfo>();
     
-    public boolean add(UserInfo userInfo) {
+    public static boolean add(UserInfo userInfo) {
         users.add(userInfo);
         return true;
     }
     
-    public boolean delete(String userName, String password) {
+    public static boolean delete(String userName, String password) {
+        
         return true;
     }
     
-    public boolean modify(String userName, String password) {
+    public static boolean modify(String userName, String password) {
         return true;
     }
     
-    public boolean find(String userName) {
-        return true;
+    public static String find(String userName, String password) {
+        String nickName = null;
+        
+        return nickName;
     }
 
 }

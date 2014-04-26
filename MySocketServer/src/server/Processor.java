@@ -10,7 +10,7 @@ public class Processor {
     AsynchronousSocketChannel clientSocket;
     String requestStr;
     HttpHelper httpHelper;
-
+    // process the request and response
     public Processor(AsynchronousSocketChannel clientSocket, String requestStr) {
         this.clientSocket = clientSocket;
         this.requestStr = requestStr;

@@ -110,7 +110,7 @@ public class HttpHelper implements HttpConstants {
             responseCode = statusLine + serverLine + contentTypeLine + end
                     + errorBody;
         }
-        System.out.println(responseCode);
+        System.out.println(statusLine);
 
         ByteBuffer responseBuffer = ByteBuffer.allocate(1024 * 1024);
         responseBuffer = ByteBuffer.wrap(responseCode.getBytes("UTF-8"));

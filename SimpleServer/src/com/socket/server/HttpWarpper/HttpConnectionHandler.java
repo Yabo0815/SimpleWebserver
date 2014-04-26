@@ -30,6 +30,7 @@ public class HttpConnectionHandler implements Runnable {
 	@Override
 	public void run() {
 		try {
+//		    System.out.println("sock accepted");
 			this.in=sock.getInputStream();
 			this.out=sock.getOutputStream();
 			this.req=new HttpRequest(in);

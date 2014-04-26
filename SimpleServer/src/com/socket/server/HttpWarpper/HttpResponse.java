@@ -1,10 +1,11 @@
 package com.socket.server.HttpWarpper;
 
-import java.io.*;
-import java.util.*;
-
-import com.socket.server.HttpWarpper.HttpConstants.HttpVersion;
-import com.socket.server.HttpWarpper.HttpConstants.StatusCode;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 /*
@@ -86,7 +87,7 @@ public class HttpResponse implements HttpConstants {
 		out.write(contentTypeLine.getBytes());
 		out.write(contentLengthLine.getBytes());
 		out.write(HttpConstants.CRLF.getBytes());
-		
+		System.out.println("header sent" + statusLine);
 		//Send body
 		if(isExists) {
 			sendBody(fis,out);

@@ -44,6 +44,7 @@ public class HttpRequest implements HttpConstants{
 	public void processRequest() throws IOException{
 		
 			String headerLine=br.readLine();
+//			System.out.println(headerLine);
 			//if(headerLine.equals(HttpConstants.CRLF)|| headerLine.equals("") ) break;
 			StringTokenizer s=new StringTokenizer(headerLine);
 			String temp=s.nextToken();
